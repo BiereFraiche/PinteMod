@@ -1,0 +1,105 @@
+PINTEMOD v2.1.1 — INSTALLATION
+===============================
+
+EMPLACEMENT DE L’ARCHIVE
+------------------------
+Extraire l’archive directement dans le dossier qui contient boiii et zone, par exemple :
+
+E:\Games\BO3\Server\UnrankedServer\
+
+Après extraction :
+
+UnrankedServer\
+├── Launch_PinteMod_Server.bat
+├── Launch_PinteMod_Server_Only.bat
+├── Launch_PinteMod_Remote_Tools.bat
+├── boiii\
+│   ├── custom_scripts\
+│   └── tools\
+└── zone\
+
+INSTALLATION PROPRE
+-------------------
+1. Arrêter complètement le serveur, le bridge GeoIP, le Ban Service et la Live Console.
+2. Sauvegarder l’ancienne installation et les données locales souhaitées.
+3. Supprimer les anciens fichiers PinteMod de boiii\custom_scripts afin d’éviter les doublons.
+4. Extraire le contenu de l’archive dans UnrankedServer, pas dans boiii.
+5. Lancer Launch_PinteMod_Server.bat.
+
+PREMIER LANCEMENT
+-----------------
+Le lanceur vérifie le secret RCON local. S’il manque, le configurateur demande un mot de passe de huit caractères minimum, sans espace ni guillemet.
+
+Le configurateur crée localement :
+
+- zone\pintemod_server_secrets.cfg ;
+- boiii\tools\PinteMod_GeoIP_Bridge.secret.txt ;
+- boiii\tools\PinteMod_GeoIP_Bridge.local.json.
+
+Il ajoute en dernière position de zone\server_zm.cfg le chargement de pintemod_server_secrets.cfg. g_password est forcé à vide.
+
+Le lanceur recherche ensuite le .bat ou .cmd habituel du serveur. Le choix est mémorisé dans :
+
+boiii\tools\PinteMod_Server_Launcher.local.json
+
+LANCEMENT LOCAL COMPLET
+-----------------------
+Launch_PinteMod_Server.bat lance :
+
+1. le Ban Service avant BOIII, afin de nettoyer les expirations ;
+2. le serveur BOIII ;
+3. le bridge GeoIP ;
+4. la Live Console.
+
+Lorsque le processus BOIII surveillé s’arrête, les outils lancés par PinteMod sont fermés.
+
+AUTRES MODES
+------------
+Launch_PinteMod_Server_Only.bat : serveur BOIII uniquement.
+
+Launch_PinteMod_Remote_Tools.bat : Ban Service, GeoIP et Live Console sur une autre machine ou l’hôte d’une VM.
+
+Voir DEPLOIEMENT_LOCAL_VM_DISTANT_FR.txt avant d’utiliser un partage réseau, une VM ou un VPS.
+
+VERIFICATIONS
+-------------
+Au démarrage, chaque module doit apparaître une seule fois :
+
+[PinteMod] <Module> <version> loaded
+
+Le module de bans doit afficher :
+
+[PinteMod] Bans v2.1.1 loaded
+
+Dans la console serveur :
+
+g_password
+
+Résultat attendu : valeur vide.
+
+Dans le bridge :
+
+[GEOIP] client=#... xuid=... country=... language=...
+
+Dans la Live Console, vérifier JOIN, COUNTRY_ANNOUNCED, LANGUAGE_ASSIGNED, CHAT, COMMAND et BAN.
+
+Tests recommandés :
+
+ezzlocalizationtest suite
+ezzcommunitytest suite BiereFraiche
+ezzbantest suite
+
+SECURITE
+--------
+Ne jamais publier :
+
+- zone\pintemod_server_secrets.cfg ;
+- boiii\tools\*.local.json ;
+- boiii\tools\*.secret.txt ;
+- boiii\scriptdata\pintemod\ ;
+- les journaux, records, préférences ou bannissements réels.
+
+
+V2.1.1 — Après extraction, lancer Verify_PinteMod_Installation.bat avant le
+premier démarrage. Le lanceur principal cache le superviseur, conserve ses
+erreurs dans boiii/tools/runtime et laisse BOIII + Live Console visibles.

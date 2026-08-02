@@ -1,0 +1,53 @@
+PINTEMOD v2.1.1 — LOCALISATION ET GEOIP
+=======================================
+
+Langues intégrées : français (fr), anglais (en), espagnol (es).
+
+Commandes :
+.lang fr
+.lang en
+.lang es
+.lang auto
+
+La préférence manuelle est persistante et prioritaire. .lang auto supprime cette préférence et réactive la détection automatique.
+
+FONCTIONNEMENT
+--------------
+Le GSC crée une demande temporaire contenant le BOIII_XUID et le numéro client. Le bridge interroge le serveur par RCON status, associe le slot au XUID, effectue la résolution GeoIP en mémoire, puis écrit une réponse temporaire pays/langue.
+
+Persistance autorisée : BOIII_XUID + langue.
+Aucune adresse IP n’est enregistrée par le bridge ou dans les préférences PinteMod.
+
+BOIII peut imprimer temporairement la sortie brute de status dans sa console native. Le bridge regroupe les demandes et utilise un cache court validé par XUID pour limiter cette sortie.
+
+CONFIGURATION LOCALE
+--------------------
+Si BOIII et le bridge tournent sur la même machine :
+
+server_address = 127.0.0.1
+server_port    = net_port du serveur
+
+VM OU MACHINE DISTANTE
+----------------------
+Si le bridge tourne ailleurs, 127.0.0.1 ne convient plus. Utiliser l’adresse LAN/VPN du serveur et limiter le pare-feu à la machine du bridge.
+
+Le bridge doit aussi accéder au dossier :
+
+boiii\scriptdata\pintemod\localization
+
+Le secret DPAPI doit être créé sur la machine et sous le compte Windows qui exécutent réellement le bridge.
+
+Voir DEPLOIEMENT_LOCAL_VM_DISTANT_FR.txt.
+
+AJOUTER UNE LANGUE
+------------------
+1. ajouter les textes dans ezz_admin_localization.gsc ;
+2. ajouter le code langue accepté ;
+3. ajouter les pays concernés dans PinteMod_GeoIP_Bridge.example.json ;
+4. compléter ezzlocalizationtest ;
+5. valider sur serveur réel avant publication.
+
+
+V2.1.1 — Les statistiques agrégées sont documentées dans docs/LANGSTATS_FR.txt.
+Le bridge ne stocke toujours aucune IP et n'enregistre aucun lien XUID/pays dans
+les fichiers de statistiques.

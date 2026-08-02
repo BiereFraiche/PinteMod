@@ -1,0 +1,43 @@
+PINTEMOD v2.1.1 — LIVE CONSOLE EN LECTURE SEULE
+================================================
+
+La Live Console lit les journaux locaux. Elle ne crée pas de client RCON et
+n'envoie aucune commande au serveur.
+
+INTERFACE v2.1.1
+----------------
+- fond noir ;
+- flux Chat et commandes séparés ;
+- filtres WARN, MUTE et BAN ;
+- suivi des erreurs Supervisor, Ban Service et GeoIP ;
+- tableau inféré des joueurs : pseudo, XUID abrégé, rôle, langue, pays, présence,
+  mute/ban, ranked/unranked et événement récent ;
+- détection différée de quelques secondes pour éviter un faux rôle `user` avant l’attachement XUID ;
+- présence calculée depuis les timestamps GSC `[xxxx ms]` et actualisée toutes les 30 secondes ;
+- autres changements rafraîchis au plus toutes les cinq secondes, sans scintillement ;
+- masquage des adresses IP éventuellement présentes dans un log natif.
+
+Le tableau est reconstruit depuis les journaux de la session. Une valeur
+`unknown` signifie qu'aucun événement structuré correspondant n'a encore été
+observé, pas qu'une donnée privée est recherchée ailleurs.
+
+SUPERVISEUR
+-----------
+Le superviseur principal est caché par Launch_PinteMod_Server.bat. Ses messages
+utiles sont conservés dans :
+
+boiii/tools/runtime/PinteMod_Supervisor.log
+boiii/tools/runtime/PinteMod_Supervisor.bootstrap.out.log
+boiii/tools/runtime/PinteMod_Supervisor.bootstrap.error.log
+
+Les sorties/erreurs Ban Service et GeoIP sont également dans runtime/. La Live
+Console suit les erreurs ; une panne n'est donc pas masquée silencieusement.
+
+VALIDATION REELLE v2.1.1
+--------------------
+- ouverture automatique depuis Launch_PinteMod_Server.bat : PASS ;
+- fond noir et lecture seule : PASS ;
+- suivi Supervisor/Ban Service/GeoIP : PASS ;
+- rôle, langue, pays, XUID abrégé et état Ranked : PASS ;
+- calcul dynamique de présence : PASS ;
+- absence de spam lorsque la liste des joueurs est vide : PASS.

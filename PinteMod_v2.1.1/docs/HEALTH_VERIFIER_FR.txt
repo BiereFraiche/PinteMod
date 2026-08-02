@@ -1,0 +1,77 @@
+PINTEMOD v2.1.1 — HEALTH ET VERIFICATEUR D'INSTALLATION
+================================================================
+
+COMMANDES GSC
+-------------
+
+ezzhealth
+    Résumé des modules et outils essentiels.
+
+ezzhealth full
+    Détail des modules, heartbeats et chemins publics visibles. Aucun mot de
+    passe, secret, IP joueur ou GUID n'est affiché.
+
+ETATS DES OUTILS
+----------------
+
+CONNECTED               processus actif et heartbeat récent observé
+CONFIGURED_NOT_ACTIVE    heartbeat présent mais état waiting/configured/stopped
+DETECTED                 fichier reconnu mais état inconnu
+STALE                    la séquence du heartbeat ne progresse plus
+ABSENT                   aucun heartbeat local
+ERROR                    heartbeat invalide ou état d'erreur
+
+Le premier appel GSC ne peut pas convertir un timestamp UTC. Il mémorise la
+séquence puis détecte STALE si elle ne progresse pas pendant 45 secondes. Le
+vérificateur Windows utilise en complément `updated_utc` et fournit un contrôle
+immédiat plus précis.
+
+HEARTBEATS LOCAUX
+-----------------
+
+boiii/scriptdata/pintemod/health/supervisor.json
+boiii/scriptdata/pintemod/health/ban_service.json
+boiii/scriptdata/pintemod/health/geoip_bridge.json
+boiii/scriptdata/pintemod/health/live_console.json
+
+Ils ne contiennent aucun secret.
+
+VERIFICATEUR
+------------
+
+Verify_PinteMod_Installation.bat
+    Audit normal de l'installation.
+
+Test_PinteMod_v2.1.1.bat
+    Audit approfondi incluant les heartbeats et journaux d'erreur récents.
+
+Le script PowerShell vérifie notamment :
+- racine UnrankedServer et emplacements ;
+- GSC en double, imports et commandes en double ;
+- syntaxe PowerShell avec le parseur AST officiel de la machine Windows ;
+- BAT, versions et nouveaux modules ;
+- présence de hotfix.gsc localement sans le distribuer ;
+- server_zm.cfg, include du secret RCON, secret DPAPI et cohérence ;
+- adresse/port et correspondance avec net_port ;
+- recherche du net_port dans le processus BOIII dédié actif, server_zm.cfg, Server.bat (variables simples incluses) puis les journaux récents ;
+- lanceur BOIII existant ;
+- permissions d'écriture ;
+- dépendances PowerShell ;
+- double instance ;
+- fichiers locaux à ne jamais publier.
+
+CODES DE SORTIE
+---------------
+0  aucun avertissement ni erreur
+1  avertissement(s), installation potentiellement utilisable
+2  erreur(s), correction requise avant validation
+
+Le rapport JSON local est écrit dans :
+boiii/scriptdata/pintemod/diagnostics/installation_verification.json
+
+VALIDATION REELLE
+-----------------
+La première passe a produit 50 PASS, 1 WARNING et 0 ERROR. Le seul WARNING était
+la lecture statique de net_port malgré un serveur réellement lié sur 27018. RC2
+ajoute une détection runtime et par journaux afin de supprimer ce faux positif
+lorsque le serveur est actif.
