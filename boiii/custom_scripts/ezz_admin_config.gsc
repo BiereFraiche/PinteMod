@@ -80,6 +80,11 @@ autoexec function init()
     level.pintemod_map_vote_min_players = 1;
     level.pintemod_map_change_delay = 5;
 
+    // After a genuine Zombies game end, continue with the next entry from
+    // sv_maprotation by executing BOIII's native map_rotate command.
+    // A map selected with .votemap still has priority over the rotation.
+    level.pintemod_auto_map_rotation_enabled = true;
+
     level.pintemod_votekick_min_players = 3;
     level.pintemod_votekick_player_cooldown = 180;
     level.pintemod_votekick_target_cooldown = 300;

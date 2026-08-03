@@ -206,6 +206,9 @@ function community_apply_defaults()
     if (!isdefined(level.pintemod_map_change_delay))
         level.pintemod_map_change_delay = 5;
 
+    if (!isdefined(level.pintemod_auto_map_rotation_enabled))
+        level.pintemod_auto_map_rotation_enabled = false;
+
     if (!isdefined(level.pintemod_votekick_min_players))
         level.pintemod_votekick_min_players = 3;
 
@@ -2427,13 +2430,80 @@ function community_clear_scheduled_next_map(cleared_by)
 function community_next_map_game_ended_monitor()
 {
     level waittill("game_ended");
-    community_apply_scheduled_next_map("game_ended");
+    community_handle_game_end("game_ended");
 }
 
 function community_next_map_end_game_monitor()
 {
     level waittill("end_game");
-    community_apply_scheduled_next_map("end_game");
+    community_handle_game_end("end_game");
+}
+
+function community_handle_game_end(trigger_name)
+{
+    // BOIII may emit both end notifications for the same game.
+    // The transition flag guarantees that only one command is executed.
+    if (level.pintemod_next_map_loading)
+        return;
+
+    // A map selected by the community always overrides automatic rotation.
+    if (isdefined(level.pintemod_next_map_code) &&
+        level.pintemod_next_map_code != "")
+    {
+        community_apply_scheduled_next_map(trigger_name);
+        return;
+    }
+
+    if (!level.pintemod_auto_map_rotation_enabled)
+        return;
+
+    level.pintemod_next_map_loading = true;
+    level thread community_apply_auto_map_rotation(trigger_name);
+}
+
+function community_apply_auto_map_rotation(trigger_name)
+{
+    delay = level.pintemod_map_change_delay;
+    previous_map = community_get_map_name();
+
+    community_broadcast(
+        "^5[PinteMod]^7 Loading the next map in the server rotation in " +
+        delay + " seconds..."
+    );
+
+    community_append_file(
+        "pintemod/logs/community.log",
+        "[" + GetTime() + "] AUTO_MAP_ROTATE_TRIGGER | " +
+        trigger_name + " | current=" + previous_map + "\n"
+    );
+
+    wait delay;
+
+    community_append_file(
+        "pintemod/logs/community.log",
+        "[" + GetTime() + "] MAP_ROTATE_COMMAND | map_rotate\n"
+    );
+
+    println("^5[PinteMod]^7 Executing: map_rotate");
+    executecommand("map_rotate");
+
+    // A successful map_rotate unloads this script. Reaching this check
+    // while the old map is still active means the command was rejected.
+    wait 3;
+
+    if (community_get_map_name() == previous_map)
+    {
+        level.pintemod_next_map_loading = false;
+        println("^1[PinteMod] map_rotate command failed");
+        community_broadcast(
+            "^1[PinteMod]^7 Automatic map rotation failed."
+        );
+        community_append_file(
+            "pintemod/logs/community.log",
+            "[" + GetTime() + "] MAP_ROTATE_FAILED | current=" +
+            previous_map + "\n"
+        );
+    }
 }
 
 function community_apply_scheduled_next_map(trigger_name)
@@ -2465,6 +2535,10 @@ function community_apply_scheduled_next_map(trigger_name)
 
 function community_apply_map(map_code, map_display)
 {
+    // Prevent the automatic end-of-game rotation from racing a PinteMod
+    // map change or restart that is already waiting on its delay.
+    level.pintemod_next_map_loading = true;
+
     delay = level.pintemod_map_change_delay;
     previous_map = community_get_map_name();
 
@@ -2492,6 +2566,7 @@ function community_apply_map(map_code, map_display)
 
     if (community_get_map_name() == previous_map)
     {
+        level.pintemod_next_map_loading = false;
         println("^1[PinteMod] Vote passed but map command failed");
         community_broadcast("^1[PinteMod]^7 Vote passed but map command failed.");
         community_append_file(
@@ -3930,6 +4005,10 @@ function cmd_ezzcommunitystatus(args)
         level.pintemod_map_vote_min_players
     );
     println("^7Map command: " + level.pintemod_map_command);
+    println(
+        "^7Automatic map rotation: " +
+        level.pintemod_auto_map_rotation_enabled
+    );
     println("^7Kick command: " + level.pintemod_kick_command);
     println("^7Role identity: BOIII_XUID (centralized)");
     println("^7Vote electorate: BOIII_XUID");
