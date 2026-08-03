@@ -1,0 +1,16 @@
+PINTE MOD v2.1.1 — VALIDATION DES EASTER EGGS
+=============================================
+
+Les écritures officielles sont activées carte par carte uniquement après confirmation du signal natif de fin de quête sur serveur réel.
+
+Commandes principales :
+ezzeestatus
+ezzeemaps
+ezzeeplayers
+ezzeecandidates <map>
+ezzeevalidate <map> confirm
+ezzeeval <map>
+ezzeeofficial <map> enable
+
+Origins / zm_tomb est validé OFFICIAL dans la v2.1.0.
+Ne pas activer une autre carte avant une validation réelle complète.

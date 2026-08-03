@@ -1,0 +1,127 @@
+PINTEMOD v2.1.1 — DEPLOIEMENT LOCAL, VM ET MACHINE DISTANTE
+=============================================================
+
+ARCHITECTURE PAR DEFAUT
+-----------------------
+Le paquet public est configuré pour le cas le plus simple et le plus sûr :
+
+- serveur BOIII ;
+- Ban Service ;
+- bridge GeoIP ;
+- Live Console ;
+
+sur la même machine Windows et sous le même compte utilisateur.
+
+Dans ce mode, le bridge utilise :
+
+server_address = 127.0.0.1
+server_port    = le net_port du serveur
+
+Le lanceur principal est placé à la racine du serveur :
+
+<UnrankedServer>\Launch_PinteMod_Server.bat
+
+MODE 1 — TOUT SUR LA MEME MACHINE
+---------------------------------
+Extraire l’archive directement dans le dossier qui contient boiii et zone :
+
+<UnrankedServer>\
+├── Launch_PinteMod_Server.bat
+├── boiii\
+│   ├── custom_scripts\
+│   └── tools\
+└── zone\
+
+Lancer Launch_PinteMod_Server.bat. Au premier lancement, le RCON est demandé une seule fois, puis stocké localement :
+
+- zone\pintemod_server_secrets.cfg ;
+- boiii\tools\PinteMod_GeoIP_Bridge.secret.txt (DPAPI) ;
+- boiii\tools\PinteMod_GeoIP_Bridge.local.json ;
+- boiii\tools\PinteMod_Server_Launcher.local.json.
+
+MODE 2 — TOUT DANS UNE VM
+-------------------------
+Si BOIII et les trois outils PinteMod tournent dans la même VM, la configuration locale reste valable. 127.0.0.1 désigne alors la VM elle-même.
+
+Exécuter le configurateur et les outils avec le même compte Windows dans la VM. Le secret DPAPI est lié au compte et à la machine qui l’ont créé.
+
+MODE 3 — BOIII DANS UNE VM, OUTILS SUR L’HOTE
+----------------------------------------------
+Dans ce cas :
+
+1. donner à la VM une adresse LAN/VPN stable ;
+2. autoriser le port UDP/RCON uniquement depuis l’adresse de l’hôte ;
+3. partager le dossier serveur ou mapper un lecteur réseau afin que les outils puissent accéder à boiii\scriptdata\pintemod ;
+4. lancer Launch_PinteMod_Remote_Tools.bat sur la machine qui exécute les outils ;
+5. indiquer l’adresse privée/VPN de la VM et le port net_port.
+
+Ne pas utiliser 127.0.0.1 depuis l’hôte : cette adresse désignerait l’hôte, pas la VM.
+
+MODE 4 — OUTILS SUR UNE AUTRE MACHINE DU RESEAU
+------------------------------------------------
+La machine d’outils doit disposer :
+
+- d’un accès en lecture/écriture au dossier boiii\scriptdata\pintemod ;
+- d’un accès UDP au port RCON BOIII ;
+- d’un compte Windows autorisé sur le partage réseau.
+
+Exemple de chemin réseau :
+
+\\SERVEUR-BOIII\UnrankedServer\boiii\scriptdata\pintemod
+
+Utiliser Launch_PinteMod_Remote_Tools.bat. Le script demande :
+
+- le chemin local ou UNC qui contient boiii ;
+- l’adresse LAN/VPN du serveur ;
+- le port BOIII/RCON.
+
+Le configurateur RCON doit être exécuté sur la machine et avec le compte Windows qui lanceront réellement le bridge. Copier un fichier DPAPI .secret.txt créé sur une autre machine ou par un autre compte ne suffit pas.
+
+MODE 5 — SERVEUR DISTANT / VPS
+------------------------------
+Recommandations :
+
+- privilégier un VPN privé (WireGuard, ZeroTier ou équivalent) ;
+- ne jamais exposer librement le RCON à Internet ;
+- limiter le pare-feu à l’adresse de la machine d’outils ;
+- utiliser un mot de passe RCON fort et distinct ;
+- protéger le partage réseau et ne donner l’écriture qu’au compte d’outils ;
+- ne jamais synchroniser les fichiers *.secret.txt ou *.local.json vers GitHub.
+
+LANCEURS DISPONIBLES
+--------------------
+Launch_PinteMod_Server.bat
+    Mode local complet : Ban Service, serveur BOIII, GeoIP et Live Console.
+
+Launch_PinteMod_Server_Only.bat
+    Lance uniquement le serveur BOIII avec la configuration locale mémorisée.
+
+Launch_PinteMod_Remote_Tools.bat
+    Lance Ban Service, GeoIP et Live Console depuis une machine distincte.
+
+DEPENDANCES DES OUTILS
+----------------------
+GeoIP Bridge :
+- accès RCON au serveur ;
+- accès aux demandes de localisation dans scriptdata.
+
+Ban Service :
+- accès en lecture/écriture à boiii\scriptdata\pintemod\bans ;
+- doit tourner pour appliquer et expirer correctement les bannissements temporaires.
+
+Live Console :
+- accès en lecture aux journaux de session ;
+- n’envoie jamais de commande au serveur.
+
+SECURITE ET CONFIDENTIALITE
+---------------------------
+Le bridge GeoIP traite temporairement l’adresse renvoyée par RCON status, puis la supprime. PinteMod ne persiste pas les IP.
+
+Le Ban Service conserve uniquement le BOIII_XUID, le dernier pseudo connu, la raison, l’auteur et les dates UTC. Il ne conserve aucune IP.
+
+BOIII peut néanmoins imprimer temporairement la sortie brute de status dans sa console native.
+
+
+V2.1.1 — Exécuter Verify_PinteMod_Installation.bat -RemoteToolsMachine sur un
+poste d'outils distant. Les fichiers DPAPI doivent être recréés avec le compte
+Windows et sur la machine qui exécute les outils.

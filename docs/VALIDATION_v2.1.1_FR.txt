@@ -1,0 +1,142 @@
+PINTEMOD v2.1.1 — PROCEDURE DE VALIDATION GROUPEE
+=========================================================
+
+STATUT STABLE AU 2026-08-02
+--------------------------
+VALIDÉ SUR SERVEUR RÉEL :
+- chargement des 28 GSC ;
+- Installation Verifier : 50 PASS, 1 faux WARNING net_port initial, détection renforcée dans la version stable, 0 ERROR ;
+- lanceur, superviseur discret, client BOIII déjà ouvert ;
+- Ban Service, GeoIP, Live Console et heartbeats ;
+- ezzhealth / full ;
+- ezzlangstats langue et pays LOCAL ;
+- ezzmapaudit / full sur Origins ;
+- ezzv211test suite 0 : 88/88 PASS, failed=0, skipped=0.
+
+DIFFÉRÉ / NON OFFICIEL :
+- tests réels de modération avec second compte.
+
+AVANT LE TEST
+-------------
+1. Arrêter BOIII et tous les outils PinteMod.
+2. Sauvegarder boiii/custom_scripts et boiii/scriptdata/pintemod.
+3. Supprimer les anciens ezz_admin*.gsc avant extraction pour éviter les doublons.
+4. Extraire le ZIP directement dans UnrankedServer.
+5. Conserver votre hotfix.gsc BOIII local, mais ne jamais le publier.
+6. Exécuter Verify_PinteMod_Installation.bat et corriger tous les ERROR.
+
+A. SESSION SANS SECOND COMPTE
+-----------------------------
+
+A1 — Démarrage
+- lancer Launch_PinteMod_Server.bat ;
+- vérifier que seule la console BOIII et la Live Console restent visibles ;
+- confirmer fond noir de la Live Console ;
+- vérifier boiii/tools/runtime si une erreur est signalée.
+
+A2 — Vérification Windows approfondie
+- lancer Test_PinteMod_v2.1.1.bat pendant que le serveur et les outils tournent ;
+- attendu : AST PowerShell PASS, aucun doublon, RCON/DPAPI cohérents et RCON/net_port PASS depuis le processus BOIII actif ;
+- heartbeats Supervisor/Ban/GeoIP/Live Console récents ;
+- les WARNING sur fichiers locaux à ne pas publier sont informatifs sur un serveur.
+
+A3 — Diagnostics GSC
+Exécuter :
+  ezzhealth
+  ezzhealth full
+  ezzmapaudit
+  ezzmapaudit full
+  ezzlangstats
+  ezzmoderationstatus
+  ezzv211test suite <votre joueur>
+
+Attendu : aucun secret/IP/GUID affiché ; Origins OFFICIAL uniquement ; les états
+PARTIAL/DIAGNOSTIC restent conservateurs ; suite groupée sans artefact TEST.
+
+A4 — Langstats
+- noter les compteurs ;
+- se reconnecter une fois et confirmer une seule incrémentation langue/pays ;
+- tester ezzlangstats reset prepare sans confirmer si les données doivent rester ;
+- sur une copie de test, confirmer le jeton et vérifier la remise à zéro.
+
+A5 — Live Console
+- envoyer un Chat normal puis une commande ;
+- vérifier leur séparation ;
+- vérifier le tableau joueurs, XUID abrégé, rôle, langue/pays et présence ;
+- confirmer que l’état vide ne se répète pas périodiquement lorsqu’aucun joueur n’est connecté ;
+- utiliser les filtres WARN, MUTE et BAN ;
+- confirmer qu'aucune commande RCON ne peut être envoyée.
+
+A6 — Stockage et confidentialité
+- ezzstoragetest suite ;
+- ezzbantest suite ;
+- ezzmoderationtest ;
+- vérifier le nettoyage des fichiers test_*.json/.tmp/.bak ;
+- vérifier que les heartbeats ne contiennent aucun secret ;
+- vérifier qu'aucune IP n'apparaît dans localization/stats.
+
+B. SESSION UNIQUE AVEC SECOND COMPTE — DIFFÉRÉE
+------------------------------------------------
+Cette section reste disponible pour une validation officieuse ultérieure. Ne pas déclarer la modération réelle validée avant son exécution. Utiliser alors un compte User de test et noter son XUID et son slot client.
+
+B1 — Mute / Unmute
+1. .mute <slot> test-v211
+2. faire écrire le compte cible dans le Chat normal ;
+3. vérifier MUTE, MUTE_BLOCK et l'état du menu/Live Console ;
+4. déterminer si le message natif est réellement invisible pour l'autre compte ;
+5. .unmute <slot> puis confirmer le retour normal.
+
+Si le message natif reste visible, noter FAIL uniquement pour l'adaptateur mute
+natif. Ne pas inventer de commande BOIII : conserver les autres résultats.
+
+B2 — Kick
+- .kick <slot> test-v211 ;
+- confirmer déconnexion et incrément Kicks dans .history <xuid>.
+
+B3 — Ban temporaire
+- reconnecter le compte ;
+- .ban <slot> 30m test-v211-temp ;
+- confirmer kick, reconnexion refusée et historique Temporary bans +1 ;
+- pour éviter d'attendre 30 minutes lors du test interne, utiliser un environnement
+  de test/copie de données ou attendre l'expiration réelle ; ne pas éditer la base
+  publique en production sans sauvegarde ;
+- confirmer expiration puis reconnexion autorisée.
+
+B4 — Ban permanent / Unban
+- .ban <slot> perm test-v211-perm ;
+- confirmer reconnexion refusée ;
+- .unban <xuid> ;
+- confirmer reconnexion et historique Permanent bans/Unbans.
+
+B5 — Protections
+Avec les rôles nécessaires :
+- Admin vers User : autorisé ;
+- Admin vers Moderator/Helper/User selon hiérarchie : inférieur uniquement ;
+- Admin vers Admin/Owner : refusé et loggé ;
+- Owner vers Admin : autorisé ;
+- acteur vers lui-même : refusé ;
+- toute action vers 9cf34426f668fb8b : refusée ;
+- menu Moderation : mêmes résultats que Chat.
+
+C. CRITERES DE VALIDATION
+-------------------------
+- aucune régression sur démarrage, Chat, menu, Spawn/Late Join, localisation,
+  GeoIP, Live Console, Ranks, EE, Maps, Music, Events, Perks, Power-Ups, Rounds,
+  Weapons, Zombies et RCON ;
+- aucun secret/IP/profil/record local dans le paquet public ;
+- Health et verifier cohérents ;
+- statistiques uniquement agrégées ;
+- hiérarchie XUID respectée et refus journalisés ;
+- Map Audit ne surdéclare aucune capacité ;
+- une seule incertitude acceptable avant correctif ciblé : suppression native du
+  message Chat mute si le hook BOIII ne permet pas de l'intercepter.
+
+RESULTATS À RETOURNER
+---------------------
+Copier seulement :
+- résumé PASS/WARNING/ERROR de Test_PinteMod_v2.1.1.bat ;
+- résultat ezzv211test ;
+- sortie ezzhealth full ;
+- sortie ezzmapaudit full ;
+- tableau des étapes B1 à B5 avec PASS/FAIL et erreur exacte.
+Ne pas transmettre de secret RCON, IP, fichier DPAPI ni scriptdata complet.

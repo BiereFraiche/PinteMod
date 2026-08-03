@@ -1,0 +1,59 @@
+PINTEMOD v2.1.1 — MODERATION XUID
+===================================
+
+IDENTITE ET HIERARCHIE
+----------------------
+Toutes les sanctions utilisent BOIII_XUID. Le pseudo est seulement un libellé.
+
+Owner      peut agir sur Admin, Moderator, Helper et User
+Admin      peut agir sur Moderator, Helper et User
+Tous       ne peuvent pas agir sur un rôle égal/supérieur ni sur eux-mêmes
+Bootstrap  9cf34426f668fb8b est protégé
+
+COMMANDES CONSOLE
+-----------------
+ezzmute <player|xuid|client> [raison]
+ezzunmute <player|xuid|client>
+ezzkick <player|xuid|client> [raison]
+ezzhistory <player|xuid|client>
+ezzmoderationstatus
+ezzmoderationtest
+
+COMMANDES CHAT
+--------------
+.mute <player|xuid|client> [raison]
+.unmute <player|xuid|client>
+.kick <player|xuid|client> [raison]
+.history <player|xuid|client>
+.ban / .unban / .baninfo / .banlist
+
+MENU
+----
+La catégorie Moderation n'est visible qu'aux rôles Admin/Owner. La cible est
+filtrée avant l'affichage. Les actions transmettent un sélecteur XUID/slot et
+l'objet joueur acteur réel ; elles ne passent pas par une commande console qui
+transformerait implicitement l'acteur en Owner.
+
+HISTORIQUE
+----------
+boiii/scriptdata/pintemod/moderation/history/<xuid>.json
+
+Compteurs : kicks, mutes, temporary_bans, permanent_bans, unbans, dernière
+action, raison et acteur XUID. Aucune IP.
+
+MUTE
+----
+L'état persistant est stocké sous moderation/mutes/<xuid>.json. Le routeur Chat
+PinteMod refuse les messages ordinaires d'un joueur mute et journalise
+MUTE_BLOCK. Les commandes restent accessibles.
+
+Le blocage du message dans le Chat natif BOIII doit être confirmé à deux comptes.
+`level.pintemod_native_mute_command` reste vide par défaut : aucune commande
+native non vérifiée n'est exécutée. Si le hook actuel n'empêche pas l'affichage
+natif, un adaptateur BOIII confirmé sera ajouté après le test réel.
+
+LOGS
+----
+Les actions et refus apparaissent dans le journal de session moderation.log.
+Le Ban Service met à jour le même historique après application/expiration des
+requêtes de ban.

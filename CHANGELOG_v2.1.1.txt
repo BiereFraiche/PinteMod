@@ -1,0 +1,106 @@
+PinteMod v2.1.1 — Qualité et sécurité
+Date de publication stable : 2026-08-02
+Base : PinteMod v2.1.0 + HOTFIX Launcher RC1 ReleaseMutex
+
+IMPORTANT
+---------
+Cette version est un paquet TEST d'intégration. Les fonctions déjà validées en
+v2.1.0 sont conservées. Les nouveautés v2.1.1 ne doivent être déclarées comme
+validées sur serveur réel qu'après la procédure docs/VALIDATION_v2.1.1_FR.txt.
+
+AJOUTS GSC
+----------
+- ezz_admin_health.gsc
+  - ezzhealth
+  - ezzhealth full
+  - état des modules, du stockage et des outils externes par heartbeat local
+  - aucune sortie de secret, mot de passe, IP joueur ou GUID
+- ezz_admin_langstats.gsc
+  - statistiques agrégées des langues
+  - lecture du résumé agrégé des pays produit par GeoIP
+  - reset Owner en deux étapes avec jeton temporaire
+  - aucune liste de XUID uniques et aucune association joueur/pays dans les stats
+- ezz_admin_moderation.gsc
+  - mute/unmute persistant par BOIII_XUID
+  - kick direct
+  - historique unifié XUID
+  - hiérarchie Owner/Admin et protection du bootstrap Owner
+  - journalisation des refus
+- ezz_admin_map_audit.gsc
+  - ezzmapaudit / ezzmapaudit full
+  - profils conservateurs des 14 cartes officielles
+  - état EE OFFICIAL uniquement pour Origins
+  - API d'enregistrement pour profils de cartes custom
+- ezz_admin_validation.gsc
+  - ezzv211test suite
+  - regroupement des tests non destructifs
+
+MODIFICATIONS GSC
+-----------------
+- versions du Core, Config, Registry, Bans, Localization et Community alignées
+  sur v2.1.1 lorsque le fichier a été modifié ;
+- Chat : routes Health, Langstats, Map Audit et Modération ;
+- Menu v1.0.0 : catégorie Moderation filtrée par rôle et cible ;
+- commandes de menu exécutées avec l'identité réelle de l'acteur ;
+- labels Moderation FR/EN/ES ;
+- aide du menu corrigée pour les touches réellement utilisées : 2 / 3 ;
+- Bans : conservation de la logique existante et raccord à l'historique externe.
+
+OUTILS WINDOWS
+--------------
+- Verify_PinteMod_Installation.bat
+- boiii/tools/Verify_PinteMod_Installation.ps1
+- Test_PinteMod_v2.1.1.bat
+- heartbeats sans secrets pour Supervisor, Ban Service, GeoIP et Live Console ;
+- compteur pays agrégé dans le bridge GeoIP ;
+- tableau joueurs en lecture seule dans la Live Console ;
+- fond noir, filtres WARN/MUTE/BAN, XUID abrégés ;
+- suivi des journaux d'erreur des outils ;
+- superviseur lancé en arrière-plan sans fenêtre permanente ;
+- sortie bootstrap du superviseur conservée dans boiii/tools/runtime ;
+- mutex ReleaseMutex sécurisé dans les outils concernés.
+
+DOCUMENTATION
+-------------
+- README.md et README_FR.md détaillés ;
+- architecture v2.1.1 ;
+- guides Health/Verifier, Modération, Langstats, Map Audit et Live Console ;
+- exemple docs/examples/custom_map_profile.example.gsc non chargé au runtime ;
+- procédure groupée solo + second compte ;
+- manifeste et SHA256 régénérés à partir du paquet final.
+
+CONFIDENTIALITÉ ET PUBLICATION
+-----------------------------
+Le paquet public exclut explicitement :
+- hotfix.gsc ;
+- boiii/scriptdata ;
+- logs ;
+- profils joueurs et records réels ;
+- bases de bans locales ;
+- fichiers *.local.json et *.secret.txt ;
+- secrets DPAPI et RCON ;
+- adresses IP réelles ;
+- configuration server_zm.cfg locale.
+
+POINT À VALIDER SUR SERVEUR RÉEL
+--------------------------------
+Le stockage et la hiérarchie du mute sont implémentés. Le blocage effectif du
+message Chat natif dépend du hook BOIII disponible. L'adaptateur natif reste
+vide par défaut afin de ne pas exécuter une commande BOIII non confirmée. Le
+test à deux comptes déterminera si le hook Chat actuel suffit ou si un adaptateur
+BOIII validé doit être renseigné.
+
+
+CONSOLIDATION STABLE — RETOURS SERVEUR REEL
+----------------------------------------------
+- suppression des BOM UTF-8 sur les GSC concernés ;
+- vérificateur corrigé : hotfix.gsc binaire ignoré, lanceurs helpers acceptés,
+  rapport JSON PowerShell 5.1 corrigé et contrôle BOM ajouté ;
+- client BOIII déjà ouvert autorisé avant le serveur dédié ;
+- démarrage Live Console dans une fenêtre indépendante ;
+- arguments ServerRoot locaux supprimés pour éviter le guillemet final parasite ;
+- suite validation corrigée : absence de joueur = SKIP et langues inconnues = Other ;
+- résultat serveur réel : ezzv211test suite 0 = 88/88 PASS ;
+- Live Console : timestamps `[xxxx ms]`, délai d’identité, présence actualisée et suppression du spam lorsque la liste des joueurs est vide ;
+- vérificateur : net_port lu depuis le processus actif, le BAT, la config ou les logs ;
+- modération réelle avec second compte volontairement différée et non déclarée validée.

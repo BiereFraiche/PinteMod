@@ -1,0 +1,9 @@
+{
+  "server_launcher": "",
+  "server_process_name": "boiii",
+  "tool_start_delay_seconds": 5,
+  "server_start_timeout_seconds": 90,
+  "launch_ban_service": true,
+  "launch_geoip": true,
+  "launch_live_console": true
+}

@@ -1,0 +1,94 @@
+PinteMod v2.1.1 — Public package manifest
+=====================================================
+
+Extraction target: UnrankedServer/ (the directory that directly contains boiii and zone).
+Package status: STABLE — solo integration validated; second-account moderation validation deferred and not claimed.
+
+Intentionally excluded:
+- hotfix.gsc;
+- zone/server_zm.cfg and all real RCON secrets;
+- *.local.json, *.secret.txt, *.dpapi and machine/account-bound files;
+- boiii/scriptdata, runtime logs, player profiles, records and bans databases;
+- real player IP addresses and any other local server data.
+
+Public bootstrap identity:
+- Display name: BiereFraiche
+- BOIII_XUID: 9cf34426f668fb8b
+- Role: owner
+
+Public files: 74
+
+.gitignore
+CHANGELOG_v2.1.1.txt
+Configure_PinteMod_RCON.bat
+LICENSE
+Launch_PinteMod_Remote_Tools.bat
+Launch_PinteMod_Server.bat
+Launch_PinteMod_Server_Only.bat
+README.md
+README_FR.md
+SECURITY.md
+SHA256SUMS.txt
+THIRD_PARTY_NOTICES.md
+Test_PinteMod_v2.1.1.bat
+Verify_PinteMod_Installation.bat
+boiii/custom_scripts/ezz_admin_00_banner.gsc
+boiii/custom_scripts/ezz_admin_01_main.gsc
+boiii/custom_scripts/ezz_admin_bans.gsc
+boiii/custom_scripts/ezz_admin_chat.gsc
+boiii/custom_scripts/ezz_admin_commands.gsc
+boiii/custom_scripts/ezz_admin_community.gsc
+boiii/custom_scripts/ezz_admin_config.gsc
+boiii/custom_scripts/ezz_admin_ee_records.gsc
+boiii/custom_scripts/ezz_admin_events.gsc
+boiii/custom_scripts/ezz_admin_health.gsc
+boiii/custom_scripts/ezz_admin_identity.gsc
+boiii/custom_scripts/ezz_admin_langstats.gsc
+boiii/custom_scripts/ezz_admin_localization.gsc
+boiii/custom_scripts/ezz_admin_map_audit.gsc
+boiii/custom_scripts/ezz_admin_maps.gsc
+boiii/custom_scripts/ezz_admin_menu.gsc
+boiii/custom_scripts/ezz_admin_moderation.gsc
+boiii/custom_scripts/ezz_admin_music.gsc
+boiii/custom_scripts/ezz_admin_navigation.gsc
+boiii/custom_scripts/ezz_admin_perks.gsc
+boiii/custom_scripts/ezz_admin_powerups.gsc
+boiii/custom_scripts/ezz_admin_ranks.gsc
+boiii/custom_scripts/ezz_admin_registry.gsc
+boiii/custom_scripts/ezz_admin_rounds.gsc
+boiii/custom_scripts/ezz_admin_storage.gsc
+boiii/custom_scripts/ezz_admin_validation.gsc
+boiii/custom_scripts/ezz_admin_weapons.gsc
+boiii/custom_scripts/ezz_admin_zombies.gsc
+boiii/tools/.gitignore
+boiii/tools/Configure_PinteMod_Server_Secrets.bat
+boiii/tools/Configure_PinteMod_Server_Secrets.ps1
+boiii/tools/Launch_PinteMod_Ban_Service.bat
+boiii/tools/Launch_PinteMod_GeoIP_Bridge.bat
+boiii/tools/Launch_PinteMod_LiveConsole.bat
+boiii/tools/PinteMod_Ban_Service.ps1
+boiii/tools/PinteMod_GeoIP_Bridge.example.json
+boiii/tools/PinteMod_GeoIP_Bridge.ps1
+boiii/tools/PinteMod_LiveConsole.ps1
+boiii/tools/PinteMod_Remote_Tools.example.json
+boiii/tools/PinteMod_Remote_Tools_Launcher.ps1
+boiii/tools/PinteMod_Server_Launcher.example.json
+boiii/tools/PinteMod_Server_Launcher.ps1
+boiii/tools/Verify_PinteMod_Installation.ps1
+docs/ARCHITECTURE.md
+docs/BANNISSEMENTS_FR.txt
+docs/COMMANDES_CONSOLE_FR.txt
+docs/DEPLOIEMENT_LOCAL_VM_DISTANT_FR.txt
+docs/HEALTH_VERIFIER_FR.txt
+docs/INSTALLATION_FR.txt
+docs/LANGSTATS_FR.txt
+docs/LIVE_CONSOLE_FR.txt
+docs/LOCALISATION_GEOIP_FR.txt
+docs/MAP_AUDIT_CUSTOM_FR.txt
+docs/MODERATION_FR.txt
+docs/MODIFIED_FILES_v2.1.1.txt
+docs/PACKAGE_MANIFEST_v2.1.1.txt
+docs/STATIC_VALIDATION_v2.1.1.txt
+docs/VALIDATION_EE_FR.txt
+docs/VALIDATION_v2.1.1_FR.txt
+docs/examples/custom_map_profile.example.gsc

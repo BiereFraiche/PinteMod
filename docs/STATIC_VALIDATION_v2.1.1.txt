@@ -1,0 +1,89 @@
+PinteMod v2.1.1 — Static validation report
+================================================
+
+Validation date: 2026-08-02
+Base: PinteMod v2.1.0 public package + Launcher RC1 hotfix + selected server files used only as local references.
+Target: public package extracted directly into UnrankedServer/.
+
+RESULT
+------
+PASS — 0 error, 0 warning in the consolidated stable Linux-side static audit.
+
+PACKAGE INVENTORY AT VALIDATION TIME
+------------------------------------
+Public files: 74, including this report and the exact file-delta report.
+GSC modules: 28
+GSC functions found: 976
+Registered console commands: 143
+PowerShell scripts: 7
+BAT launchers/tools: 10
+
+CHECKS PERFORMED
+----------------
+PASS  All expected public files are present.
+PASS  No hotfix.gsc is distributed.
+PASS  No scriptdata directory or runtime data is distributed.
+PASS  No local JSON configuration, DPAPI secret, RCON secret, log, player profile,
+      record database or ban database is distributed.
+PASS  Only the public bootstrap Owner XUID is configured as a real identity.
+PASS  The two additional 16-character identifiers are explicit synthetic values
+      used only by the non-destructive moderation test matrix.
+PASS  IPv4 literals are limited to loopback and reserved TEST-NET documentation examples.
+PASS  All text files are valid UTF-8.
+PASS  GSC braces, parentheses and brackets are balanced.
+PASS  Every local GSC import resolves to a packaged module.
+PASS  Cross-module namespace calls resolve to declared functions.
+PASS  No duplicate GSC function was found in a module.
+PASS  No duplicate registered console command was found.
+PASS  The custom-map example is stored under docs/examples and is not imported by runtime GSC.
+PASS  PowerShell braces, parentheses and brackets pass the package lexer check.
+PASS  PowerShell function names are unique within each script.
+PASS  Mutex release calls are guarded by successful acquisition.
+PASS  BAT parentheses, labels and referenced packaged scripts pass the package checks.
+PASS  All public JSON examples parse successfully.
+PASS  All relative Markdown links resolve inside the package.
+PASS  Runtime version labels consistently target v2.1.1.
+PASS  No obvious embedded credential assignment was detected.
+PASS  The package tree preserves boiii/custom_scripts and root launcher locations.
+
+ADDITIONAL MANUAL/SEMANTIC REVIEW
+---------------------------------
+PASS  The launcher refuses a second configured BOIII server process.
+PASS  Background Ban Service and GeoIP failures remain written to runtime logs.
+PASS  The supervisor keeps ownership of child processes and performs clean shutdown.
+PASS  Live Console contains no RCON command sender and remains read-only.
+PASS  Moderation actions use XUID/client selectors internally and enforce hierarchy.
+PASS  Bootstrap Owner and self-sanction protections are present.
+PASS  Langstats persists aggregate counters only; it stores no IP and no player-country mapping.
+PASS  Health heartbeats contain no secret and are monitored continuously for stale state.
+PASS  Map audit uses conservative declared states and does not convert diagnostic support to official support.
+
+WINDOWS-SIDE CHECK STILL REQUIRED
+---------------------------------
+The build environment used for this report does not provide Windows PowerShell,
+System.Management.Automation or a BOIII runtime. Therefore the official PowerShell
+AST parser and actual BAT execution could not be run here.
+
+Run the following on the target Windows server before the real BOIII test:
+
+    Verify_PinteMod_Installation.bat
+    Test_PinteMod_v2.1.1.bat
+
+The verifier invokes the installed Windows PowerShell parser for every packaged
+.ps1 file and reports PASS, WARNING or ERROR. A package must not be promoted from
+TEST to FINAL until this Windows check and the grouped real-server validation in
+VALIDATION_v2.1.1_FR.txt have succeeded.
+
+REAL-SERVER STATUS
+------------------
+The features inherited from v2.1.0 retain the validation status supplied by the
+server owner. The real-server solo validation is complete for startup, the four Windows tools,
+all 28 GSC modules, Health, Langstats, Origins Map Audit, the read-only Live
+Console and the non-destructive suite (88/88 PASS). Stable changes to net_port
+detection and dynamic presence still require one final Windows rerun. Native
+suppression of a muted player's chat and the other second-account moderation
+actions remain unvalidated.
+
+FINAL LIVE CONSOLE VALIDATION
+-----------------------------
+PASS — dynamic presence display and empty-player refresh suppression validated on the real server.
