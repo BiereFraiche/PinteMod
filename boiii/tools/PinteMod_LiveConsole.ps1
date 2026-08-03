@@ -297,6 +297,12 @@ function Write-TaggedLine {
     param([string]$Tag, [string]$Category, [string]$Text, [string]$Color)
 
     $Text = Protect-VisibleText -Text $Text
+    
+    # MODERATION_STATE is informational, not a ban event.
+    if ($Tag -eq "BAN" -and $Text -match '(?i)\bMODERATION_STATE\b') {
+    $Tag = "MOD"
+}
+
     $Category = Get-EffectiveCategory -Tag $Tag -Category $Category -Text $Text
     if (-not $script:ShowDiagnostics -and (Test-DiagnosticLine -Tag $Tag -Text $Text)) { return }
     if (-not (Test-LineVisible -Category $Category -Text $Text)) { return }
