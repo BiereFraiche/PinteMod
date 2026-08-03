@@ -443,15 +443,12 @@ function Show-PlayerDashboard {
         }
     }
 
-    # Presence is refreshed every 30 seconds even when no other state changes.
-    # This keeps the timer useful without redrawing the table every five seconds.
-    $signature = ($players | ForEach-Object { "$($_.Client)|$($_.Xuid)|$($_.Role)|$($_.Language)|$($_.Country)|$($_.Muted)|$($_.Banned)|$($_.Ranked)|$($_.Recent)" }) -join ';'
-    # Refresh the timer only while at least one player is connected.
-    # An empty dashboard is printed once on startup or state transition, not every 30 seconds.
-    $presenceRefreshDue = ($players.Count -gt 0 -and (($now - $script:LastDashboardRender).TotalSeconds -ge 30))
-    if (-not $Force -and $signature -eq $script:LastDashboardSignature -and -not $presenceRefreshDue) { return }
-    $script:LastDashboardSignature = $signature
-    $script:LastDashboardRender = $now
+      # Redraw only when a meaningful player state changes.
+# Presence continues to update internally but no longer forces a dashboard print.
+$signature = ($players | ForEach-Object { "$($_.Client)|$($_.Xuid)|$($_.Role)|$($_.Language)|$($_.Country)|$($_.Muted)|$($_.Banned)|$($_.Ranked)|$($_.Recent)" }) -join ';'
+if (-not $Force -and $signature -eq $script:LastDashboardSignature) { return }
+$script:LastDashboardSignature = $signature
+$script:LastDashboardRender = $now
 
     Write-Host ''
     Write-Host '----- CONNECTED PLAYERS (READ-ONLY) -----' -ForegroundColor DarkCyan
