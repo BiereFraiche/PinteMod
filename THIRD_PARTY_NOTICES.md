@@ -1,27 +1,77 @@
-# Third-party notices
+PINTEMOD v2.1.1 — HEALTH ET VERIFICATEUR D'INSTALLATION
+================================================================
 
-PinteMod is an independent community project for dedicated Call of Duty: Black Ops III Zombies servers running BOIII/Ezz.
+COMMANDES GSC
+-------------
 
-## PinteMod source
+ezzhealth
+    Résumé des modules et outils essentiels.
 
-Copyright © 2026 BiereFraiche.
+ezzhealth full
+    Détail des modules, heartbeats et chemins publics visibles. Aucun mot de
+    passe, secret, IP joueur ou GUID n'est affiché.
 
-PinteMod source files and the Live Console are distributed under the GNU General Public License version 3. See `LICENSE`.
+ETATS DES OUTILS
+----------------
 
-Development assistance was provided with ChatGPT. BiereFraiche remains the project publisher and maintainer.
+CONNECTED               processus actif et heartbeat récent observé
+CONFIGURED_NOT_ACTIVE    heartbeat présent mais état waiting/configured/stopped
+DETECTED                 fichier reconnu mais état inconnu
+STALE                    la séquence du heartbeat ne progresse plus
+ABSENT                   aucun heartbeat local
+ERROR                    heartbeat invalide ou état d'erreur
 
-## External software and game assets
+Le premier appel GSC ne peut pas convertir un timestamp UTC. Il mémorise la
+séquence puis détecte STALE si elle ne progresse pas pendant 45 secondes. Le
+vérificateur Windows utilise en complément `updated_utc` et fournit un contrôle
+immédiat plus précis.
 
-PinteMod does not include Call of Duty: Black Ops III, BOIII/Ezz, Treyarch scripts, Activision assets, music files, models, textures, maps, executable binaries, or other proprietary game content.
+HEARTBEATS LOCAUX
+-----------------
 
-Call of Duty, Black Ops and related names and assets belong to their respective rights holders. BOIII/Ezz is a separate project governed by its own terms and licences. PinteMod is not affiliated with or endorsed by Activision, Treyarch or the BOIII/Ezz maintainers.
+boiii/scriptdata/pintemod/health/supervisor.json
+boiii/scriptdata/pintemod/health/ban_service.json
+boiii/scriptdata/pintemod/health/geoip_bridge.json
+boiii/scriptdata/pintemod/health/live_console.json
 
-PinteMod calls runtime functions and console commands exposed by the installed game/server environment. Those external interfaces and components are not relicensed by PinteMod.
+Ils ne contiennent aucun secret.
 
-## BOIII compatibility hotfix
+VERIFICATEUR
+------------
 
-The BOIII compatibility file historically named `hotfix.gsc` is not part of PinteMod v2.1.1. Obtain any required BOIII compatibility files from the BOIII/Ezz project or the server distribution that provides them, under their original terms.
+Verify_PinteMod_Installation.bat
+    Audit normal de l'installation.
 
-## Administrator responsibility
+Test_PinteMod_v2.1.1.bat
+    Audit approfondi incluant les heartbeats et journaux d'erreur récents.
 
-Server administrators are responsible for owning the required game/server files, respecting the terms that apply to their environment, and reviewing local privacy or logging requirements before enabling persistent logs.
+Le script PowerShell vérifie notamment :
+- racine UnrankedServer et emplacements ;
+- GSC en double, imports et commandes en double ;
+- syntaxe PowerShell avec le parseur AST officiel de la machine Windows ;
+- BAT, versions et nouveaux modules ;
+- absence attendue de l'ancien hotfix.gsc avec BOIII v2.0.0 ; sa présence déclenche un WARNING de compatibilité ;
+- server_zm.cfg, include du secret RCON, secret DPAPI et cohérence ;
+- adresse/port et correspondance avec net_port ;
+- recherche du net_port dans le processus BOIII dédié actif, server_zm.cfg, Server.bat (variables simples incluses) puis les journaux récents ;
+- lanceur BOIII existant ;
+- permissions d'écriture ;
+- dépendances PowerShell ;
+- double instance ;
+- fichiers locaux à ne jamais publier.
+
+CODES DE SORTIE
+---------------
+0  aucun avertissement ni erreur
+1  avertissement(s), installation potentiellement utilisable
+2  erreur(s), correction requise avant validation
+
+Le rapport JSON local est écrit dans :
+boiii/scriptdata/pintemod/diagnostics/installation_verification.json
+
+VALIDATION REELLE
+-----------------
+La première passe a produit 50 PASS, 1 WARNING et 0 ERROR. Le seul WARNING était
+la lecture statique de net_port malgré un serveur réellement lié sur 27018. RC2
+ajoute une détection runtime et par journaux afin de supprimer ce faux positif
+lorsque le serveur est actif.
