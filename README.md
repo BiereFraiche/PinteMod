@@ -12,6 +12,29 @@ Players do not need to install a client mod. PinteMod runs from the dedicated se
 > **Post-v2.1.1 experimental additions:** Community Soft Pause v0.3, Remote LAN Control feedback and Pause events in Live Console.
 > They are intentionally documented separately so experimental work is not confused with the frozen v2.1.1 stable core.
 
+## PinteMod Control Center
+
+Prefer a modern graphical operator experience? **[PinteMod Control Center v2.2.0](https://github.com/BiereFraiche/PinteModControlCenter/releases/tag/v2.2.0)** is the official companion Windows application for PinteMod.
+
+[![Download Control Center](https://img.shields.io/badge/Download-Control%20Center%20v2.2.0-168BFF)](https://github.com/BiereFraiche/PinteModControlCenter/releases/tag/v2.2.0)
+[![Control Center tests](https://img.shields.io/badge/tests-460%20passing-24C875)](https://github.com/BiereFraiche/PinteModControlCenter)
+
+[![PinteMod Control Center dashboard](https://raw.githubusercontent.com/BiereFraiche/PinteModControlCenter/main/design/pintemod-control-center-reference.png)](https://github.com/BiereFraiche/PinteModControlCenter)
+
+It provides:
+
+- a dark, responsive dashboard with up to eight isolated server tabs;
+- map, session, service, player, Rank, record and structured-log views;
+- explicit local or read-only LAN data sources, with no automatic installation discovery;
+- manual allowlisted RCON diagnostics and confirmed server/player actions;
+- BOIII_XUID-based targeting, DPAPI-protected RCON secrets and conservative no-retry delivery rules;
+- per-server visual accents and a color-aware public server-name editor.
+
+Real controls appear only when the installed PinteMod runtime publishes fresh, compatible capabilities. Unsupported or unverifiable controls remain disabled or simulated. The Control Center does not start or stop BOIII and does not rewrite PinteMod server files.
+
+- [Download PinteMod Control Center v2.2.0](https://github.com/BiereFraiche/PinteModControlCenter/releases/tag/v2.2.0)
+- [View its source and security model](https://github.com/BiereFraiche/PinteModControlCenter)
+
 ## Highlights in v2.1.1
 
 - global GSC diagnostics with `ezzhealth` and `ezzhealth full`;
