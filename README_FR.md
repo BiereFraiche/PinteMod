@@ -12,6 +12,29 @@ Les joueurs n'ont pas besoin d'installer de mod client. PinteMod fonctionne côt
 > **Ajouts expérimentaux post-v2.1.1 :** Community Soft Pause v0.3, retour RCON distant et événements Pause dans la Live Console.
 > Ils restent documentés séparément afin de ne pas les présenter comme faisant déjà partie du cœur stable v2.1.1.
 
+## PinteMod Control Center
+
+Vous préférez une véritable interface graphique d’administration ? **[PinteMod Control Center v2.2.0](https://github.com/BiereFraiche/PinteModControlCenter/releases/tag/v2.2.0)** est l’application Windows compagnon officielle de PinteMod.
+
+[![Télécharger le Control Center](https://img.shields.io/badge/Télécharger-Control%20Center%20v2.2.0-168BFF)](https://github.com/BiereFraiche/PinteModControlCenter/releases/tag/v2.2.0)
+[![Tests Control Center](https://img.shields.io/badge/tests-460%20réussis-24C875)](https://github.com/BiereFraiche/PinteModControlCenter)
+
+[![Dashboard PinteMod Control Center](https://raw.githubusercontent.com/BiereFraiche/PinteModControlCenter/main/design/pintemod-control-center-reference.png)](https://github.com/BiereFraiche/PinteModControlCenter)
+
+Il apporte notamment :
+
+- un Dashboard sombre et redimensionnable avec jusqu’à huit onglets serveurs isolés ;
+- les vues carte, session, services, joueurs, Ranks, records et logs structurés ;
+- une source locale ou un partage LAN read-only explicitement choisi, sans découverte automatique ;
+- des diagnostics RCON manuels à liste blanche et des actions serveur/joueur confirmées ;
+- un ciblage par BOIII_XUID, un secret RCON protégé par DPAPI et aucune répétition automatique ;
+- une couleur d’accent par serveur et un éditeur du nom public compatible avec les couleurs BOIII.
+
+Les commandes réelles ne sont proposées que lorsque le runtime PinteMod installé publie des capacités fraîches et compatibles. Les fonctions non prises en charge ou impossibles à vérifier restent désactivées ou simulées. Le Control Center ne démarre ni n’arrête BOIII et ne réécrit pas les fichiers serveur PinteMod.
+
+- [Télécharger PinteMod Control Center v2.2.0](https://github.com/BiereFraiche/PinteModControlCenter/releases/tag/v2.2.0)
+- [Consulter ses sources et son modèle de sécurité](https://github.com/BiereFraiche/PinteModControlCenter)
+
 ## Points forts de la v2.1.1
 
 - diagnostics GSC globaux avec `ezzhealth` et `ezzhealth full` ;
